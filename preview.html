@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Durgerking</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#D72300',
+                        secondary: '#FFC72C',
+                        dark: '#2B2D42',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .cart-sidebar {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        .cart-sidebar.open {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md fixed top-0 w-full z-50">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <span class="text-2xl font-extrabold text-primary">DURGER<span class="text-secondary">KING</span></span>
+            </div>
+            <button id="cart-icon" class="relative p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <span id="cart-count" class="absolute top-0 right-0 bg-secondary text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 pt-20 pb-24">
+        <!-- Hero Banner -->
+        <div class="w-full bg-primary rounded-lg mt-4 mb-8 overflow-hidden">
+            <div class="p-6 text-white">
+                <h1 class="text-3xl font-bold mb-2">Flame-Grilled Perfection</h1>
+                <p class="mb-4">Order your favorite burgers for delivery or pickup</p>
+                <button class="bg-secondary text-dark font-bold px-6 py-2 rounded-full hover:bg-opacity-90 transition">Order Now</button>
+            </div>
+        </div>
+
+        <!-- Menu Section -->
+        <h2 class="text-2xl font-bold mb-6">Our Menu</h2>
+        <div id="menu-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Menu items will be inserted here via JavaScript -->
+        </div>
+    </main>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar" class="cart-sidebar fixed top-0 right-0 w-full md:w-96 h-full bg-white shadow-lg z-50 flex flex-col">
+        <div class="p-4 bg-primary text-white flex justify-between items-center">
+            <h2 class="text-xl font-bold">Your Order</h2>
+            <button id="close-cart" class="text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        
+        <div id="cart-items" class="flex-1 overflow-y-auto p-4">
+            <!-- Cart items will be inserted here -->
+            <p id="empty-cart-message" class="text-center text-gray-500 py-8">Your cart is empty</p>
+        </div>
+        
+        <div class="border-t p-4">
+            <div class="flex justify-between font-bold mb-4 text-lg">
+                <span>Total:</span>
+                <span id="cart-total">$0.00</span>
+            </div>
+            <button id="checkout-btn" class="w-full bg-primary text-white py-3 px-4 rounded-lg font-bold hover:bg-opacity-90 transition">
+                Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- Dark Overlay -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden"></div>
+
+    <script>
+        // Menu data
+        const menuItems = [
+            {
+                id: 1,
+                name: 'Whopper Burger',
+                description: 'Flame-grilled beef patty, tomatoes, lettuce, mayo, pickles, and onions on a toasted sesame seed bun',
+                price: 6.99,
+                image: 'https://via.placeholder.com/300/D72300/FFFFFF?text=Whopper'
+            },
+            {
+                id: 2,
+                name: 'Double Cheese Burger',
+                description: 'Two flame-grilled beef patties, double cheese, pickles, ketchup and mustard on a toasted sesame seed bun',
+                price: 8.49,
+                image: 'https://via.placeholder.com/300/D72300/FFFFFF?text=Double+Cheese'
+            },
+            {
+                id: 3,
+                name: 'Chicken Royale',
+                description: 'Crispy chicken breast fillet, lettuce, mayo, in a long toasted bun',
+                price: 7.29,
+                image: 'https://via.placeholder.com/300/D72300/FFFFFF?text=Chicken+Royale'
+            },
+            {
+                id: 4,
+                name: 'Plant-Based Whopper',
+                description: 'Plant-based patty, tomatoes, lettuce, mayo, pickles, and onions on a toasted sesame seed bun',
+                price: 7.49,
+                image: 'https://via.placeholder.com/300/D72300/FFFFFF?text=Plant+Whopper'
+            },
+            {
+                id: 5,
+                name: 'Bacon King',
+                description: 'Two flame-grilled beef patties, bacon, cheese, ketchup and mayo on a toasted sesame seed bun',
+                price: 9.99,
+                image: 'https://via.placeholder.com/300/D72300/FFFFFF?text=Bacon+King'
+            },
+            {
+                id: 6,
+                name: 'Steakhouse Burger',
+                description: 'Flame-grilled beef patty, bacon, cheese, crispy onions, and BBQ sauce on a brioche bun',
+                price: 8.99,
+                image: 'https://via.placeholder.com/300/D72300/FFFFFF?text=Steakhouse'
+            }
+        ];
+
+        // Cart data
+        let cart = [];
+
+        // DOM elements
+        const menuContainer = document.getElementById('menu-container');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const cartIcon = document.getElementById('cart-icon');
+        const closeCart = document.getElementById('close-cart');
+        const cartItems = document.getElementById('cart-items');
+        const cartTotal = document.getElementById('cart-total');
+        const cartCount = document.getElementById('cart-count');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        const overlay = document.getElementById('overlay');
+        const emptyCartMessage = document.getElementById('empty-cart-message');
+
+        // Render menu items
+        function renderMenu() {
+            menuContainer.innerHTML = '';
+            menuItems.forEach(item => {
+                const menuItem = document.createElement('div');
+                menuItem.className = 'bg-white rounded-lg shadow-md overflow-hidden';
+                menuItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <div class="flex justify-between items-start">
+                            <h3 class="font-bold text-lg">${item.name}</h3>
+                            <span class="font-bold text-primary">$${item.price.toFixed(2)}</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mt-1 mb-4">${item.description}</p>
+                        <button class="add-to-cart-btn bg-primary text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-opacity-90 transition" 
+                                data-id="${item.id}">
+                            Add to Cart
+                        </button>
+                    </div>
+                `;
+                menuContainer.appendChild(menuItem);
+            });
+
+            // Add event listeners to "Add to Cart" buttons
+            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const itemId = parseInt(button.getAttribute('data-id'));
+                    addToCart(itemId);
+                });
+            });
+        }
+
+        // Add item to cart
+        function addToCart(itemId) {
+            const item = menuItems.find(item => item.id === itemId);
+            if (!item) return;
+
+            // Check if item already in cart
+            const existingItemIndex = cart.findIndex(cartItem => cartItem.id === itemId);
+            
+            if (existingItemIndex !== -1) {
+                // Increment quantity
+                cart[existingItemIndex].quantity += 1;
+            } else {
+                // Add new item to cart
+                cart.push({
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    quantity: 1
+                });
+            }
+            
+            // Show feedback
+            const button = document.querySelector(`.add-to-cart-btn[data-id="${itemId}"]`);
+            const originalText = button.textContent;
+            button.textContent = 'Added!';
+            button.classList.add('bg-green-600');
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.classList.remove('bg-green-600');
+            }, 1000);
+            
+            // Update cart UI
+            updateCartUI();
+        }
+
+        // Remove item from cart
+        function removeFromCart(itemId) {
+            const existingItemIndex = cart.findIndex(cartItem => cartItem.id === itemId);
+            
+            if (existingItemIndex !== -1) {
+                if (cart[existingItemIndex].quantity > 1) {
+                    // Decrement quantity
+                    cart[existingItemIndex].quantity -= 1;
+                } else {
+                    // Remove item from cart
+                    cart.splice(existingItemIndex, 1);
+                }
+                
+                // Update cart UI
+                updateCartUI();
+            }
+        }
+
+        // Update cart UI
+        function updateCartUI() {
+            // Update cart count
+            const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
+            cartCount.textContent = itemCount;
+            
+            // Calculate total
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            cartTotal.textContent = `$${total.toFixed(2)}`;
+            
+            // Update cart items in sidebar
+            if (cart.length === 0) {
+                emptyCartMessage.classList.remove('hidden');
+                cartItems.innerHTML = '';
+                cartItems.appendChild(emptyCartMessage);
+            } else {
+                emptyCartMessage.classList.add('hidden');
+                cartItems.innerHTML = '';
+                
+                cart.forEach(item => {
+                    const cartItemElement = document.createElement('div');
+                    cartItemElement.className = 'flex items-center justify-between mb-4 pb-4 border-b';
+                    cartItemElement.innerHTML = `
+                        <div>
+                            <h3 class="font-bold">${item.name}</h3>
+                            <p class="text-gray-600">$${item.price.toFixed(2)} × ${item.quantity}</p>
+                        </div>
+                        <div class="flex items-center border rounded">
+                            <button class="remove-item-btn px-3 py-1 text-primary" data-id="${item.id}">-</button>
+                            <span class="px-3 py-1 border-x">${item.quantity}</span>
+                            <button class="add-item-btn px-3 py-1 text-primary" data-id="${item.id}">+</button>
+                        </div>
+                    `;
+                    
+                    cartItems.appendChild(cartItemElement);
+                });
+                
+                // Add event listeners to cart item buttons
+                document.querySelectorAll('.add-item-btn').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const itemId = parseInt(button.getAttribute('data-id'));
+                        addToCart(itemId);
+                    });
+                });
+                
+                document.querySelectorAll('.remove-item-btn').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const itemId = parseInt(button.getAttribute('data-id'));
+                        removeFromCart(itemId);
+                    });
+                });
+            }
+        }
+
+        // Toggle cart sidebar
+        function toggleCart() {
+            cartSidebar.classList.toggle('open');
+            overlay.classList.toggle('hidden');
+        }
+
+        // Event listeners
+        cartIcon.addEventListener('click', toggleCart);
+        closeCart.addEventListener('click', toggleCart);
+        overlay.addEventListener('click', toggleCart);
+
+        checkoutBtn.addEventListener('click', () => {
+            if (cart.length === 0) {
+                alert('Your cart is empty');
+                return;
+            }
+            
+            alert('Thank you for your order!');
+            cart = [];
+            updateCartUI();
+            toggleCart();
+        });
+
+        // Initialize the app
+        renderMenu();
+        updateCartUI();
+    </script>
+</body>
+</html>
