@@ -3,7 +3,7 @@ import { MenuItem } from '../types/types';
 
 // Create axios instance with base configuration
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || 'https://whatever-relief-graphs-sims.trycloudflare.com',
+    baseURL: import.meta.env.VITE_API_URL || 'https://telegramshopback.vercel.app',
     headers: {
         'Content-Type': 'application/json',
     }
