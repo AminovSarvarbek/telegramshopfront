@@ -1,7 +1,7 @@
 // src/AdminRoutes.tsx
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { useTelegram } from './hooks/useTelegram';
+// import { useTelegram } from './hooks/useTelegram';
 
 // Admin pages
 import AdminLogin from './pages/admin/AdminLogin';
