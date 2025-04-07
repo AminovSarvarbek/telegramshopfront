@@ -1,7 +1,6 @@
 // src/AdminRoutes.tsx
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-// import { useTelegram } from './hooks/useTelegram';
 
 // Admin pages
 import AdminLogin from './pages/admin/AdminLogin';
@@ -49,6 +48,17 @@ const ProtectedAdminRoute: React.FC<{ children: React.ReactNode }> = ({ children
 };
 
 const AdminRoutes: React.FC = () => {
+  // Refresh and close handlers for ProductForm
+  const handleRefresh = () => {
+    // Sahifani yangilash logikasi
+    console.log("Refreshing product list..."); // O'zgartiring o'zingizga mos ravishda
+  };
+
+  const handleClose = () => {
+    // Sahifani yopish logikasi
+    console.log("Closing product form..."); // O'zgartiring o'zingizga mos ravishda
+  };
+
   return (
     <Routes>
       <Route path="/login" element={<AdminLogin />} />
@@ -67,7 +77,7 @@ const AdminRoutes: React.FC = () => {
         path="/products/new"
         element={
           <ProtectedAdminRoute>
-            <ProductForm />
+            <ProductForm onRefresh={handleRefresh} onClose={handleClose} />
           </ProtectedAdminRoute>
         }
       />
@@ -76,7 +86,7 @@ const AdminRoutes: React.FC = () => {
         path="/products/edit/:id"
         element={
           <ProtectedAdminRoute>
-            <ProductForm />
+            <ProductForm onRefresh={handleRefresh} onClose={handleClose} />
           </ProtectedAdminRoute>
         }
       />
