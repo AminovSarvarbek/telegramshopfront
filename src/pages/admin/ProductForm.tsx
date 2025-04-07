@@ -112,7 +112,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ productToEdit, onRefresh, onC
       }
 
       if (productToEdit) {
-        await updateProduct(productToEdit.id.toString(), formData);
+        await updateProduct(productToEdit.id, formData);
       } else {
         await addProduct(formData);
       }
