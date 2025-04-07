@@ -23,7 +23,7 @@ const MainApp: React.FC = () => {
   const [isTelegramReady, setIsTelegramReady] = useState(false);
   
   // Initialize Telegram hook
-  const { getUserData, isInTelegram } = useTelegram();
+  const { getUserData } = useTelegram();
   
   // Initialize Telegram WebApp
   useEffect(() => {
